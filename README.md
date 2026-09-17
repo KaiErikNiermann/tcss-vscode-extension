@@ -1,5 +1,7 @@
 # Textual CSS Syntax Highlighter (Community)
 
+[![ci](https://github.com/KaiErikNiermann/tcss-vscode-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/KaiErikNiermann/tcss-vscode-extension/actions/workflows/ci.yml) [![VS Marketplace](https://vsmarketplacebadges.dev/version-short/KaiErikNiermann.tcss-syntax-highlighter.svg?label=VS%20Marketplace&color=0066b8)](https://marketplace.visualstudio.com/items?itemName=KaiErikNiermann.tcss-syntax-highlighter) [![Open VSX](https://img.shields.io/open-vsx/v/KaiErikNiermann/tcss-syntax-highlighter?label=Open%20VSX&color=c160ef)](https://open-vsx.org/extension/KaiErikNiermann/tcss-syntax-highlighter)
+
 Language support for [Textual](https://github.com/Textualize/textual) CSS: syntax highlighting for `.tcss` files and for TCSS embedded in Python, plus a language server that parses the document.
 
 ![A view of a highlighted file.](./tcss.png)
