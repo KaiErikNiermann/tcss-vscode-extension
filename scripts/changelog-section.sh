@@ -18,4 +18,5 @@ if [ -z "$(printf '%s' "$section" | tr -d '[:space:]')" ]; then
   exit 1
 fi
 
-printf '%s\n' "$section"
+# Trim leading and trailing blank lines so the release body does not open on one.
+printf '%s\n' "$section" | sed -e '/./,$!d' | tac | sed -e '/./,$!d' | tac
