@@ -1,0 +1,58 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Build and attach the vsix without publishing
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Hoisted to the job so the publish steps can test for them in `if:`.
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run check
+
+      - name: Package
+        id: package
+        run: |
+          pnpm run package
+          echo "vsix=$(ls -1 ./*.vsix | head -1)" >> "$GITHUB_OUTPUT"
+
+      # Publishing is skipped rather than failed when a token is absent, so the
+      # workflow stays useful in a fork that has no Marketplace credentials.
+      - name: Publish to the Visual Studio Marketplace
+        if: ${{ inputs.dry-run != true && env.VSCE_PAT != '' }}
+        run: pnpm exec vsce publish --no-dependencies --packagePath "${{ steps.package.outputs.vsix }}"
+
+      - name: Publish to Open VSX
+        if: ${{ inputs.dry-run != true && env.OVSX_PAT != '' }}
+        run: pnpm exec ovsx publish "${{ steps.package.outputs.vsix }}" --pat "$OVSX_PAT"
+
+      - name: Attach the vsix to the GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ steps.package.outputs.vsix }}
+          generate_release_notes: true
