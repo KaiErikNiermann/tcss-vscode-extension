@@ -53,8 +53,23 @@ export function isBlockEntry(item: unknown): item is BlockEntry {
     return reflection.isInstance(item, BlockEntry.$type);
 }
 
+export interface ChildCombinator extends langium.AstNode {
+    readonly $container: Selector;
+    readonly $type: 'ChildCombinator';
+    value: '>';
+}
+
+export const ChildCombinator = {
+    $type: 'ChildCombinator',
+    value: 'value'
+} as const;
+
+export function isChildCombinator(item: unknown): item is ChildCombinator {
+    return reflection.isInstance(item, ChildCombinator.$type);
+}
+
 export interface ClassSelector extends langium.AstNode {
-    readonly $container: CompoundSelector;
+    readonly $container: Selector;
     readonly $type: 'ClassSelector';
     name: string;
 }
@@ -100,27 +115,12 @@ export function isColorLiteral(item: unknown): item is ColorLiteral {
     return reflection.isInstance(item, ColorLiteral.$type);
 }
 
-export interface CompoundSelector extends langium.AstNode {
-    readonly $container: SelectorStep;
-    readonly $type: 'CompoundSelector';
-    parts: Array<SelectorPart>;
-}
-
-export const CompoundSelector = {
-    $type: 'CompoundSelector',
-    parts: 'parts'
-} as const;
-
-export function isCompoundSelector(item: unknown): item is CompoundSelector {
-    return reflection.isInstance(item, CompoundSelector.$type);
-}
-
 export interface Declaration extends langium.AstNode {
     readonly $container: RuleSet;
     readonly $type: 'Declaration';
     important: boolean;
     name: string;
-    value: Value;
+    value?: Value;
 }
 
 export const Declaration = {
@@ -150,7 +150,7 @@ export function isDurationLiteral(item: unknown): item is DurationLiteral {
 }
 
 export interface IdSelector extends langium.AstNode {
-    readonly $container: CompoundSelector;
+    readonly $container: Selector;
     readonly $type: 'IdSelector';
     name: string;
 }
@@ -195,7 +195,7 @@ export function isKeyword(item: unknown): item is Keyword {
 }
 
 export interface NestingSelector extends langium.AstNode {
-    readonly $container: CompoundSelector;
+    readonly $container: Selector;
     readonly $type: 'NestingSelector';
     value: '&';
 }
@@ -225,9 +225,9 @@ export function isNumberLiteral(item: unknown): item is NumberLiteral {
 }
 
 export interface PseudoClass extends langium.AstNode {
-    readonly $container: CompoundSelector;
+    readonly $container: Selector;
     readonly $type: 'PseudoClass';
-    name: string;
+    name: PseudoClassName;
 }
 
 export const PseudoClass = {
@@ -237,6 +237,12 @@ export const PseudoClass = {
 
 export function isPseudoClass(item: unknown): item is PseudoClass {
     return reflection.isInstance(item, PseudoClass.$type);
+}
+
+export type PseudoClassName = string;
+
+export function isPseudoClassName(item: unknown): item is PseudoClassName {
+    return (typeof item === 'string' && (/[a-zA-Z_][a-zA-Z0-9_-]*/.test(item) || /[a-z][a-zA-Z0-9_-]*(?=[ \t]*:)/.test(item)));
 }
 
 export interface RuleSet extends langium.AstNode {
@@ -274,16 +280,26 @@ export function isScalarLiteral(item: unknown): item is ScalarLiteral {
 export interface Selector extends langium.AstNode {
     readonly $container: SelectorList;
     readonly $type: 'Selector';
-    steps: Array<SelectorStep>;
+    elements: Array<SelectorElement>;
 }
 
 export const Selector = {
     $type: 'Selector',
-    steps: 'steps'
+    elements: 'elements'
 } as const;
 
 export function isSelector(item: unknown): item is Selector {
     return reflection.isInstance(item, Selector.$type);
+}
+
+export type SelectorElement = ChildCombinator | SelectorPart;
+
+export const SelectorElement = {
+    $type: 'SelectorElement'
+} as const;
+
+export function isSelectorElement(item: unknown): item is SelectorElement {
+    return reflection.isInstance(item, SelectorElement.$type);
 }
 
 export interface SelectorList extends langium.AstNode {
@@ -309,23 +325,6 @@ export const SelectorPart = {
 
 export function isSelectorPart(item: unknown): item is SelectorPart {
     return reflection.isInstance(item, SelectorPart.$type);
-}
-
-export interface SelectorStep extends langium.AstNode {
-    readonly $container: Selector;
-    readonly $type: 'SelectorStep';
-    combinator?: '>';
-    target: CompoundSelector;
-}
-
-export const SelectorStep = {
-    $type: 'SelectorStep',
-    combinator: 'combinator',
-    target: 'target'
-} as const;
-
-export function isSelectorStep(item: unknown): item is SelectorStep {
-    return reflection.isInstance(item, SelectorStep.$type);
 }
 
 export interface StringLiteral extends langium.AstNode {
@@ -360,7 +359,7 @@ export function isStylesheet(item: unknown): item is Stylesheet {
 }
 
 export interface TypeSelector extends langium.AstNode {
-    readonly $container: CompoundSelector;
+    readonly $container: Selector;
     readonly $type: 'TypeSelector';
     name: string;
 }
@@ -375,7 +374,7 @@ export function isTypeSelector(item: unknown): item is TypeSelector {
 }
 
 export interface UniversalSelector extends langium.AstNode {
-    readonly $container: CompoundSelector;
+    readonly $container: Selector;
     readonly $type: 'UniversalSelector';
     value: '*';
 }
@@ -418,7 +417,7 @@ export interface VariableDefinition extends langium.AstNode {
     readonly $container: Stylesheet;
     readonly $type: 'VariableDefinition';
     name: string;
-    value: Value;
+    value?: Value;
 }
 
 export const VariableDefinition = {
@@ -448,10 +447,10 @@ export function isVariableReference(item: unknown): item is VariableReference {
 
 export type TcssAstType = {
     BlockEntry: BlockEntry
+    ChildCombinator: ChildCombinator
     ClassSelector: ClassSelector
     ColorFunction: ColorFunction
     ColorLiteral: ColorLiteral
-    CompoundSelector: CompoundSelector
     Declaration: Declaration
     DurationLiteral: DurationLiteral
     IdSelector: IdSelector
@@ -463,9 +462,9 @@ export type TcssAstType = {
     RuleSet: RuleSet
     ScalarLiteral: ScalarLiteral
     Selector: Selector
+    SelectorElement: SelectorElement
     SelectorList: SelectorList
     SelectorPart: SelectorPart
-    SelectorStep: SelectorStep
     StringLiteral: StringLiteral
     Stylesheet: Stylesheet
     TypeSelector: TypeSelector
@@ -483,6 +482,15 @@ export class TcssAstReflection extends langium.AbstractAstReflection {
             properties: {
             },
             superTypes: []
+        },
+        ChildCombinator: {
+            name: ChildCombinator.$type,
+            properties: {
+                value: {
+                    name: ChildCombinator.value
+                }
+            },
+            superTypes: [SelectorElement.$type]
         },
         ClassSelector: {
             name: ClassSelector.$type,
@@ -515,16 +523,6 @@ export class TcssAstReflection extends langium.AbstractAstReflection {
             },
             superTypes: [ValueItem.$type]
         },
-        CompoundSelector: {
-            name: CompoundSelector.$type,
-            properties: {
-                parts: {
-                    name: CompoundSelector.parts,
-                    defaultValue: []
-                }
-            },
-            superTypes: []
-        },
         Declaration: {
             name: Declaration.$type,
             properties: {
@@ -537,7 +535,8 @@ export class TcssAstReflection extends langium.AbstractAstReflection {
                     name: Declaration.name
                 },
                 value: {
-                    name: Declaration.value
+                    name: Declaration.value,
+                    optional: true
                 }
             },
             superTypes: [BlockEntry.$type]
@@ -632,10 +631,16 @@ export class TcssAstReflection extends langium.AbstractAstReflection {
         Selector: {
             name: Selector.$type,
             properties: {
-                steps: {
-                    name: Selector.steps,
+                elements: {
+                    name: Selector.elements,
                     defaultValue: []
                 }
+            },
+            superTypes: []
+        },
+        SelectorElement: {
+            name: SelectorElement.$type,
+            properties: {
             },
             superTypes: []
         },
@@ -653,20 +658,7 @@ export class TcssAstReflection extends langium.AbstractAstReflection {
             name: SelectorPart.$type,
             properties: {
             },
-            superTypes: []
-        },
-        SelectorStep: {
-            name: SelectorStep.$type,
-            properties: {
-                combinator: {
-                    name: SelectorStep.combinator,
-                    optional: true
-                },
-                target: {
-                    name: SelectorStep.target
-                }
-            },
-            superTypes: []
+            superTypes: [SelectorElement.$type]
         },
         StringLiteral: {
             name: StringLiteral.$type,
@@ -734,7 +726,8 @@ export class TcssAstReflection extends langium.AbstractAstReflection {
                     name: VariableDefinition.name
                 },
                 value: {
-                    name: VariableDefinition.value
+                    name: VariableDefinition.value,
+                    optional: true
                 }
             },
             superTypes: []

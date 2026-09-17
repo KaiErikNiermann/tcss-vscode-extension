@@ -62,7 +62,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@37"
+                "$ref": "#/rules@38"
               },
               "arguments": []
             }
@@ -78,10 +78,11 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@16"
+                "$ref": "#/rules@17"
               },
               "arguments": []
-            }
+            },
+            "cardinality": "?"
           },
           {
             "$type": "Keyword",
@@ -123,7 +124,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@14"
+                "$ref": "#/rules@15"
               },
               "arguments": []
             },
@@ -190,7 +191,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
       "name": "Selector",
       "definition": {
         "$type": "Assignment",
-        "feature": "steps",
+        "feature": "elements",
         "operator": "+=",
         "terminal": {
           "$type": "RuleCall",
@@ -207,31 +208,23 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
     },
     {
       "$type": "ParserRule",
-      "name": "SelectorStep",
+      "name": "SelectorElement",
       "definition": {
-        "$type": "Group",
+        "$type": "Alternatives",
         "elements": [
           {
-            "$type": "Assignment",
-            "feature": "combinator",
-            "operator": "=",
-            "terminal": {
-              "$type": "Keyword",
-              "value": ">"
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@6"
             },
-            "cardinality": "?"
+            "arguments": []
           },
           {
-            "$type": "Assignment",
-            "feature": "target",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@6"
-              },
-              "arguments": []
-            }
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@7"
+            },
+            "arguments": []
           }
         ]
       },
@@ -241,19 +234,15 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
     },
     {
       "$type": "ParserRule",
-      "name": "CompoundSelector",
+      "name": "ChildCombinator",
       "definition": {
         "$type": "Assignment",
-        "feature": "parts",
-        "operator": "+=",
+        "feature": "value",
+        "operator": "=",
         "terminal": {
-          "$type": "RuleCall",
-          "rule": {
-            "$ref": "#/rules@7"
-          },
-          "arguments": []
-        },
-        "cardinality": "+"
+          "$type": "Keyword",
+          "value": ">"
+        }
       },
       "entry": false,
       "fragment": false,
@@ -323,7 +312,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@41"
+            "$ref": "#/rules@42"
           },
           "arguments": []
         }
@@ -342,7 +331,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@40"
+            "$ref": "#/rules@41"
           },
           "arguments": []
         }
@@ -361,7 +350,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@39"
+            "$ref": "#/rules@40"
           },
           "arguments": []
         }
@@ -419,10 +408,37 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@43"
+                "$ref": "#/rules@14"
               },
               "arguments": []
             }
+          }
+        ]
+      },
+      "entry": false,
+      "fragment": false,
+      "parameters": []
+    },
+    {
+      "$type": "ParserRule",
+      "name": "PseudoClassName",
+      "dataType": "string",
+      "definition": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@44"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@43"
+            },
+            "arguments": []
           }
         ]
       },
@@ -439,7 +455,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@15"
+              "$ref": "#/rules@16"
             },
             "arguments": []
           },
@@ -469,7 +485,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@42"
+                "$ref": "#/rules@43"
               },
               "arguments": []
             }
@@ -485,10 +501,11 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@16"
+                "$ref": "#/rules@17"
               },
               "arguments": []
-            }
+            },
+            "cardinality": "?"
           },
           {
             "$type": "Assignment",
@@ -524,7 +541,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@17"
+                "$ref": "#/rules@18"
               },
               "arguments": []
             }
@@ -544,7 +561,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@17"
+                    "$ref": "#/rules@18"
                   },
                   "arguments": []
                 }
@@ -564,13 +581,6 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
       "definition": {
         "$type": "Alternatives",
         "elements": [
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@20"
-            },
-            "arguments": []
-          },
           {
             "$type": "RuleCall",
             "rule": {
@@ -602,20 +612,6 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@19"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@18"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
               "$ref": "#/rules@25"
             },
             "arguments": []
@@ -623,7 +619,28 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
           {
             "$type": "RuleCall",
             "rule": {
+              "$ref": "#/rules@20"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@19"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
               "$ref": "#/rules@26"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@27"
             },
             "arguments": []
           }
@@ -646,7 +663,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@30"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -662,7 +679,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@17"
+                "$ref": "#/rules@18"
               },
               "arguments": []
             }
@@ -681,7 +698,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@17"
+                    "$ref": "#/rules@18"
                   },
                   "arguments": []
                 }
@@ -714,7 +731,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
           "terminal": {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@38"
+              "$ref": "#/rules@39"
             },
             "arguments": []
           },
@@ -736,7 +753,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@31"
+            "$ref": "#/rules@32"
           },
           "arguments": []
         }
@@ -755,7 +772,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@32"
+            "$ref": "#/rules@33"
           },
           "arguments": []
         }
@@ -774,7 +791,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@33"
+            "$ref": "#/rules@34"
           },
           "arguments": []
         }
@@ -793,7 +810,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@34"
+            "$ref": "#/rules@35"
           },
           "arguments": []
         }
@@ -812,7 +829,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@35"
+            "$ref": "#/rules@36"
           },
           "arguments": []
         }
@@ -831,7 +848,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@36"
+            "$ref": "#/rules@37"
           },
           "arguments": []
         }
@@ -850,7 +867,7 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@43"
+            "$ref": "#/rules@44"
           },
           "arguments": []
         }

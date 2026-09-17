@@ -9,8 +9,11 @@ entry Stylesheet:
 
 // $name: value;   -- the terminating semicolon is optional, as it is in Textual, where
 // a newline also ends the value.
+// The value may be empty -- `$foo:;` appears in Textual's own test stylesheet -- and
+// the terminating semicolon is optional, as it is in Textual, where a newline also ends
+// the value.
 VariableDefinition:
-    name=VARIABLE_DEF ':' value=Value ';'?;
+    name=VARIABLE_DEF ':' value=Value? ';'?;
 
 RuleSet:
     selectors+=SelectorList '{' entries+=BlockEntry* '}';
@@ -18,16 +21,22 @@ RuleSet:
 SelectorList:
     selectors+=Selector (',' selectors+=Selector)*;
 
-// Descendant combinators are whitespace, which the lexer hides, so a run of compound
-// selectors with no explicit combinator between them is a descendant chain.
+// A flat sequence of parts and child combinators.
+//
+// Descendant combinators are whitespace, which the lexer hides, so `A:focus` and
+// `A :focus` reach the parser as the same token sequence. Modelling a compound selector
+// as a separate rule would therefore be a fiction, and an ambiguous one: the parser
+// cannot tell whether to extend the current compound or start a new one, which sent
+// Chevrotain into unbounded recursion on `A :focus :hover {}` from Textual's own
+// test_mega_stylesheet.tcss.
 Selector:
-    steps+=SelectorStep+;
+    elements+=SelectorElement+;
 
-SelectorStep:
-    combinator='>'? target=CompoundSelector;
+SelectorElement:
+    ChildCombinator | SelectorPart;
 
-CompoundSelector:
-    parts+=SelectorPart+;
+ChildCombinator:
+    value='>';
 
 SelectorPart:
     TypeSelector | ClassSelector | IdSelector | UniversalSelector | NestingSelector | PseudoClass;
@@ -56,7 +65,14 @@ NestingSelector:
 // decide, using the same signal Textual uses: a declaration name is lower case and is
 // followed by a colon, which is what DECLARATION_NAME's lookahead matches.
 PseudoClass:
-    ':' name=TOKEN;
+    ':' name=PseudoClassName;
+
+// In `A:focus:hover`, `focus` is lower case and followed by a colon, so the lexer hands
+// it over as DECLARATION_NAME. Accepting both spellings here costs nothing: a pseudo
+// class always has its own leading colon, so it can never be confused with a
+// declaration.
+PseudoClassName returns string:
+    TOKEN | DECLARATION_NAME;
 
 // Nesting reuses RuleSet: a nested rule is the same construct, one level in.
 BlockEntry:
@@ -65,7 +81,7 @@ BlockEntry:
 // Declaration names start lower case, again matching the tokenizer. The semicolon is
 // optional because a closing brace also ends a declaration.
 Declaration:
-    name=DECLARATION_NAME ':' value=Value important?='!important'? ';'?;
+    name=DECLARATION_NAME ':' value=Value? important?='!important'? ';'?;
 
 Value:
     items+=ValueItem (','? items+=ValueItem)*;
