@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.4.1
+
+Formatter fixes.
+
+- `color: ;` and `$foo: ;` never settled. The colon asked for a space after it and the semicolon for none before it, so with no value between them the formatter alternated between `color:;` and `color: ;` on successive runs, and format-on-save rewrote the file every time.
+- `A {}` was split across two lines. Empty rules stay on one line.
+- Blank lines between declarations were collapsed, while blank lines between top-level rules survived. Both are kept now.
+- A selector list the author split one per line was joined back onto a single line. Line breaks a person put there are left alone; a value split across lines is still joined, and every spelling of it converges on the same line.
+- Variable definitions are formatted, which they were not before.
+
 ## 1.4.0
 
 First release of the community fork (`KaiErikNiermann.tcss-syntax-highlighter`).

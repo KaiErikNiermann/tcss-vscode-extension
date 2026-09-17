@@ -2,7 +2,7 @@
   "name": "tcss-syntax-highlighter",
   "displayName": "Textual Syntax Highlighter (Community)",
   "description": "Syntax highlighting for Textual CSS (.tcss) and for TCSS embedded in Python. Community-maintained fork of Textualize/tcss-vscode-extension.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "icon": "icon.png",
   "repository": {
     "type": "git",
