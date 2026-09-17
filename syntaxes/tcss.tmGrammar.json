@@ -86,6 +86,14 @@
       "end": "$",
       "name": "comment.line.tcss"
     },
+    "easing-functions": {
+      "patterns": [
+        {
+          "match": "(?<![\\w-])(?:in_back|in_bounce|in_circ|in_cubic|in_elastic|in_expo|in_out_back|in_out_bounce|in_out_circ|in_out_cubic|in_out_elastic|in_out_expo|in_out_quad|in_out_quart|in_out_quint|in_out_sine|in_quad|in_quart|in_quint|in_sine|linear|none|out_back|out_bounce|out_circ|out_cubic|out_elastic|out_expo|out_quad|out_quart|out_quint|out_sine|round)(?![\\w-])",
+          "name": "support.constant.property-value.tcss"
+        }
+      ]
+    },
     "functions": {
       "begin": "(?<![\\w-])(rgba?|hsla?)(\\()",
       "beginCaptures": {
@@ -128,7 +136,7 @@
               "name": "keyword.other.unit.${2:/downcase}.tcss"
             }
           },
-          "match": "(?<![\\w-])[-+]?(?:[0-9]+(?:\\.[0-9]+)?|\\.[0-9]+)(?:(%)|(fr|h|vh|vw|w)\\b)?",
+          "match": "(?<![\\w-])[-+]?(?:[0-9]+(?:\\.[0-9]+)?|\\.[0-9]+)(?:(%)|(fr|h|ms|s|vh|vw|w)\\b)?",
           "name": "constant.numeric.tcss"
         }
       ]
@@ -144,7 +152,7 @@
     "property-names": {
       "patterns": [
         {
-          "match": "(?<![\\w-])(?:align|align-horizontal|align-vertical|background|border|border-bottom|border-left|border-right|border-subtitle-align|border-subtitle-background|border-subtitle-color|border-subtitle-style|border-title-align|border-title-background|border-title-color|border-title-style|border-top|box-sizing|color|column-span|constrain|content-align|content-align-horizontal|content-align-vertical|display|dock|grid-columns|grid-gutter|grid-rows|grid-size|height|keyline|layer|layers|layout|link-background|link-background-hover|link-color|link-color-hover|link-style|link-style-hover|margin|margin-bottom|margin-left|margin-right|margin-top|max-height|max-width|min-height|min-width|offset|offset-x|offset-y|opacity|outline|outline-bottom|outline-left|outline-right|outline-top|overflow|overflow-x|overflow-y|overlay|padding|padding-bottom|padding-left|padding-right|padding-top|row-span|scrollbar-background|scrollbar-background-active|scrollbar-background-hover|scrollbar-color|scrollbar-color-active|scrollbar-color-hover|scrollbar-corner-color|scrollbar-gutter|scrollbar-size|scrollbar-size-horizontal|scrollbar-size-vertical|text-align|text-opacity|text-style|tint|visibility|width)(?![\\w-])",
+          "match": "(?<![\\w-])(?:align|align-horizontal|align-vertical|background|border|border-bottom|border-left|border-right|border-subtitle-align|border-subtitle-background|border-subtitle-color|border-subtitle-style|border-title-align|border-title-background|border-title-color|border-title-style|border-top|box-sizing|color|column-span|constrain|content-align|content-align-horizontal|content-align-vertical|display|dock|grid-columns|grid-gutter|grid-rows|grid-size|height|keyline|layer|layers|layout|link-background|link-background-hover|link-color|link-color-hover|link-style|link-style-hover|margin|margin-bottom|margin-left|margin-right|margin-top|max-height|max-width|min-height|min-width|offset|offset-x|offset-y|opacity|outline|outline-bottom|outline-left|outline-right|outline-top|overflow|overflow-x|overflow-y|overlay|padding|padding-bottom|padding-left|padding-right|padding-top|row-span|scrollbar-background|scrollbar-background-active|scrollbar-background-hover|scrollbar-color|scrollbar-color-active|scrollbar-color-hover|scrollbar-corner-color|scrollbar-gutter|scrollbar-size|scrollbar-size-horizontal|scrollbar-size-vertical|text-align|text-opacity|text-style|tint|transition|visibility|width)(?![\\w-])",
           "name": "support.type.property-name.tcss"
         }
       ]
@@ -162,6 +170,9 @@
         },
         {
           "include": "#functions"
+        },
+        {
+          "include": "#easing-functions"
         },
         {
           "include": "#property-keywords"

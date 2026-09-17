@@ -168,3 +168,40 @@ describe('string property values (grammar issue #2)', () => {
     expect(tokens.filter((token) => token.text === '}')).toHaveLength(2);
   });
 });
+
+// https://github.com/Textualize/tcss-textmate-grammar/issues/5
+describe('the transition property (grammar issue #5)', () => {
+  it('knows transition is a property name', async () => {
+    const tokens = await tokenize('Button {\n    transition: background 500ms in_out_cubic;\n}');
+    expect(tokenFor(tokens, 'transition')?.scopes.at(-1)).toContain('support.type.property-name');
+  });
+
+  it('scopes a millisecond duration as a number with a unit', async () => {
+    const tokens = await tokenize('Button {\n    transition: background 500ms in_out_cubic;\n}');
+    const duration = tokenFor(tokens, '500');
+    expect(duration?.scopes).toContain('constant.numeric.tcss');
+    expect(tokenFor(tokens, 'ms')?.scopes.at(-1)).toBe('keyword.other.unit.ms.tcss');
+  });
+
+  it('scopes a second duration as a number with a unit', async () => {
+    const tokens = await tokenize('Button {\n    transition: offset 1.5s out_cubic 0.2s;\n}');
+    expect(tokenFor(tokens, 's')?.scopes.at(-1)).toBe('keyword.other.unit.s.tcss');
+  });
+
+  it('scopes easing function names', async () => {
+    const tokens = await tokenize(
+      'Button {\n    transition: offset 500ms in_out_cubic, color 200ms out_bounce;\n}',
+    );
+    for (const easing of ['in_out_cubic', 'out_bounce']) {
+      expect(tokenFor(tokens, easing)?.scopes.at(-1)).toContain('support.constant.property-value');
+    }
+  });
+
+  it('handles comma-separated transition groups', async () => {
+    const tokens = await tokenize(
+      'Button {\n    transition: background $speed $type, color $speed $type;\n}',
+    );
+    expect(tokens.filter((token) => token.text === ',')).toHaveLength(1);
+    expect(tokenFor(tokens, ',')?.scopes.at(-1)).toContain('punctuation.separator');
+  });
+});
