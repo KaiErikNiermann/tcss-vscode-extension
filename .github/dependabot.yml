@@ -1,0 +1,37 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/Amsterdam
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    labels: [dependencies]
+    # Grouped so a quiet week is three or four pull requests to review rather
+    # than fifteen single-package ones.
+    groups:
+      eslint:
+        patterns: ['eslint', 'eslint-*', '@eslint/*', 'typescript-eslint', '@typescript-eslint/*']
+      typescript:
+        patterns: ['typescript', '@types/*']
+      vitest:
+        patterns: ['vitest', '@vitest/*']
+      vscode-tooling:
+        patterns: ['@vscode/*', 'ovsx', 'vscode-textmate', 'vscode-oniguruma']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/Amsterdam
+    open-pull-requests-limit: 5
+    labels: [dependencies, ci]
+    groups:
+      actions:
+        patterns: ['*']
