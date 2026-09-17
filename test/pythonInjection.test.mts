@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { linesScopedWith, tokenFor, tokenize } from './tokenize.mts';
+import { linesScopedWith, onLine, tokenFor, tokenize } from './tokenize.mts';
 
 const PYTHON = { scopeName: 'source.python' } as const;
 
@@ -95,5 +95,43 @@ describe('a single-line quoted CSS assignment (issue #7)', () => {
   it('does not fire on an identifier that merely ends in CSS', async () => {
     const tokens = await python('SCSS = "scss"\nPREFIX_CSS = "x"\n');
     expect(linesScopedWith(tokens, 'tcss')).toEqual([]);
+  });
+});
+
+// https://github.com/Textualize/tcss-vscode-extension/issues/6
+describe('a commented-out CSS assignment (issue #6)', () => {
+  it('stays a comment and does not open a TCSS region', async () => {
+    const tokens = await python(
+      [
+        'class Test(Widget):',
+        '    # DEFAULT_CSS = """',
+        '    #     Test {',
+        '    #         width: auto;',
+        '    #     }',
+        '    # """',
+        '',
+        '    def compose(self):',
+        '        return None',
+      ].join('\n'),
+    );
+
+    expect(linesScopedWith(tokens, 'tcss')).toEqual([]);
+    for (const line of [2, 3, 4, 5, 6]) {
+      const scopes = onLine(tokens, line).map((token) => token.scopes.at(-1) ?? '');
+      expect(scopes.every((scope) => scope.includes('comment'))).toBe(true);
+    }
+    expect(tokenFor(tokens, 'def')?.scopes.at(-1)).toContain('storage.type.function.python');
+  });
+
+  it('ignores a commented-out one-line assignment too', async () => {
+    const tokens = await python('# CSS = "Button { color: red; }"\nx = 1\n');
+    expect(linesScopedWith(tokens, 'tcss')).toEqual([]);
+  });
+
+  it('still opens on an ordinary indented class variable', async () => {
+    const tokens = await python(
+      ['class Test(Widget):', '    DEFAULT_CSS = """', '    Test { width: auto; }', '    """'].join('\n'),
+    );
+    expect(tokenFor(tokens, 'width')?.scopes.at(-1)).toContain('support.type.property-name');
   });
 });
