@@ -1,16 +1,19 @@
 {
   "name": "textual-syntax-highlighter",
-  "displayName": "Textual Syntax Highlighter",
-  "description": "Enables syntax highlighting for Textual CSS",
+  "displayName": "Textual Syntax Highlighter (Community)",
+  "description": "Syntax highlighting for Textual CSS (.tcss) and for TCSS embedded in Python. Community-maintained fork of Textualize/tcss-vscode-extension.",
   "version": "1.3.1",
   "icon": "icon.png",
-  "repository": "https://github.com/Textualize/tcss-vscode-extension",
-  "publisher": "Textualize",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KaiErikNiermann/tcss-vscode-extension.git"
+  },
+  "publisher": "kaierikniermann",
   "engines": {
     "vscode": "^1.79.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -61,5 +64,18 @@
     "js-yaml": "^4.1.0",
     "mocha": "^10.2.0",
     "typescript": "^5.1.3"
-  }
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KaiErikNiermann/tcss-vscode-extension/issues"
+  },
+  "homepage": "https://github.com/KaiErikNiermann/tcss-vscode-extension#readme",
+  "keywords": [
+    "textual",
+    "tcss",
+    "textual-css",
+    "python",
+    "tui",
+    "syntax-highlighting"
+  ]
 }
