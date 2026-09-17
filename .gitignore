@@ -1,5 +1,14 @@
+# build output
 out
 dist
+
+# dependencies
 node_modules
+
+# test + packaging artefacts
 .vscode-test/
+coverage/
 *.vsix
+
+# local agent scratch
+.remember/
