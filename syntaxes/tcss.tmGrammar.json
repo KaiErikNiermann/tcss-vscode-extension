@@ -173,6 +173,9 @@
           "include": "#color-keywords"
         },
         {
+          "include": "#strings"
+        },
+        {
           "include": "#text"
         },
         {
@@ -334,18 +337,57 @@
         }
       ]
     },
+    "string-escapes": {
+      "match": "\\\\(?:[0-9a-fA-F]{1,6}|.)",
+      "name": "constant.character.escape.tcss"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.tcss",
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.tcss"
+            }
+          },
+          "end": "\"|(?<!\\\\)(?=$)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.tcss"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escapes"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.tcss",
+          "begin": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.tcss"
+            }
+          },
+          "end": "'|(?<!\\\\)(?=$)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.tcss"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string-escapes"
+            }
+          ]
+        }
+      ]
+    },
     "text": {
       "match": "\\w+",
       "name": "string.tcss"
-    },
-    "variables": {
-      "captures": {
-        "1": {
-          "name": "punctuation.definition.variable.tcss"
-        }
-      },
-      "match": "(\\$)[a-zA-Z_-][a-zA-Z0-9_-]*",
-      "name": "variable.tcss"
     },
     "variable-definition": {
       "patterns": [
@@ -376,6 +418,15 @@
           ]
         }
       ]
+    },
+    "variables": {
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.variable.tcss"
+        }
+      },
+      "match": "(\\$)[a-zA-Z_-][a-zA-Z0-9_-]*",
+      "name": "variable.tcss"
     }
   }
 }

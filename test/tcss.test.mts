@@ -141,3 +141,30 @@ describe('the bundled example', () => {
     }
   });
 });
+
+// https://github.com/Textualize/tcss-textmate-grammar/issues/2
+describe('string property values (grammar issue #2)', () => {
+  it('scopes a double-quoted value as a string', async () => {
+    const tokens = await tokenize('Screen {\n    layers: "below above";\n}');
+    const open = tokenFor(tokens, '"');
+    expect(open?.scopes).toContain('string.quoted.double.tcss');
+    expect(open?.scopes.at(-1)).toContain('punctuation.definition.string.begin');
+    expect(tokenFor(tokens, 'below above')?.scopes.at(-1)).toBe('string.quoted.double.tcss');
+  });
+
+  it('scopes a single-quoted value as a string', async () => {
+    const tokens = await tokenize("#widget {\n    layer: 'overlay';\n}");
+    expect(tokenFor(tokens, 'overlay')?.scopes.at(-1)).toBe('string.quoted.single.tcss');
+  });
+
+  it('scopes an escape inside a string', async () => {
+    const tokens = await tokenize('Screen {\n    border-title: "say \\"hi\\"";\n}');
+    expect(tokenFor(tokens, String.raw`\"`)?.scopes.at(-1)).toContain('constant.character.escape');
+  });
+
+  it('does not let a brace inside a string open a rule list', async () => {
+    const tokens = await tokenize('Screen {\n    border-title: "a { b";\n}\nButton {\n    color: red;\n}');
+    expect(tokenFor(tokens, 'Button')?.scopes.at(-1)).toContain('entity.name.tag.widget.tcss');
+    expect(tokens.filter((token) => token.text === '}')).toHaveLength(2);
+  });
+});
