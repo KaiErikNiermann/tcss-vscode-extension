@@ -40,16 +40,11 @@ jobs:
           pnpm run package
           echo "vsix=$(ls -1 ./*.vsix | head -1)" >> "$GITHUB_OUTPUT"
 
-      # Publishing is skipped rather than failed when a token is absent, so the
-      # workflow stays useful in a fork that has no Marketplace credentials.
-      - name: Publish to the Visual Studio Marketplace
-        if: ${{ inputs.dry-run != true && env.VSCE_PAT != '' }}
-        run: pnpm exec vsce publish --no-dependencies --packagePath "${{ steps.package.outputs.vsix }}"
-
-      - name: Publish to Open VSX
-        if: ${{ inputs.dry-run != true && env.OVSX_PAT != '' }}
-        run: pnpm exec ovsx publish "${{ steps.package.outputs.vsix }}" --pat "$OVSX_PAT"
-
+      # The GitHub release comes first. It is the durable artefact -- a downloadable
+      # vsix for Cursor and anyone else without a marketplace -- and it should not
+      # be held hostage by a registry being down, which is exactly what happened to
+      # v1.4.1 when Open VSX returned 503.
+      #
       # Release notes are the CHANGELOG section for this version rather than a list
       # of commit subjects, so the tag and the changelog cannot say different things.
       - name: Collect the release notes
@@ -69,3 +64,15 @@ jobs:
         with:
           files: ${{ steps.package.outputs.vsix }}
           body: ${{ steps.notes.outputs.body }}
+
+      # Publishing is skipped rather than failed when a token is absent, so the
+      # workflow stays useful in a fork that has no credentials. An already-published
+      # version is treated as success so a re-run after a partial failure converges
+      # instead of tripping over the half that worked.
+      - name: Publish to the Visual Studio Marketplace
+        if: ${{ inputs.dry-run != true && env.VSCE_PAT != '' }}
+        run: ./scripts/publish.sh marketplace "${{ steps.package.outputs.vsix }}"
+
+      - name: Publish to Open VSX
+        if: ${{ inputs.dry-run != true && env.OVSX_PAT != '' }}
+        run: ./scripts/publish.sh openvsx "${{ steps.package.outputs.vsix }}"
