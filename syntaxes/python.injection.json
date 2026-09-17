@@ -1,58 +1,118 @@
 {
-    "scopeName": "tcss.python.injection",
-    "injectionSelector": "L:source.python",
-    "patterns": [
-        {
-            "begin": "(?:(?:DEFAULT_)?CSS = (\"\"\"))",
-            "beginCaptures": {
-                "1": { "name": "string.quoted.multi.python punctuation.definition.string.begin.python" }
-            },
-            "end": "(\"\"\")",
-            "endCaptures": {
-                "1": { "name": "string.quoted.multi.python punctuation.definition.string.end.python"}
-            },
-            "patterns": [
-                { "include": "source.tcss" }
-            ]
+  "scopeName": "tcss.python.injection",
+  "injectionSelector": "L:source.python",
+  "patterns": [
+    {
+      "include": "#tcss-triple-double-quoted"
+    },
+    {
+      "include": "#tcss-triple-single-quoted"
+    },
+    {
+      "include": "#tcss-double-quoted"
+    },
+    {
+      "include": "#tcss-single-quoted"
+    }
+  ],
+  "repository": {
+    "tcss-triple-double-quoted": {
+      "begin": "((?<!\\w)(?:DEFAULT_)?CSS)(\\s*)(=)(\\s*)(\"\"\")",
+      "beginCaptures": {
+        "1": {
+          "name": "constant.other.caps.python"
         },
-        {
-            "begin": "(?:(?:DEFAULT_)?CSS = ('''))",
-            "beginCaptures": {
-                "1": { "name": "string.quoted.multi.python punctuation.definition.string.begin.python" }
-            },
-            "end": "(''')",
-            "endCaptures": {
-                "1": { "name": "string.quoted.multi.python punctuation.definition.string.end.python"}
-            },
-            "patterns": [
-                { "include": "source.tcss" }
-            ]
+        "3": {
+          "name": "keyword.operator.assignment.python"
         },
-        {
-            "begin": "(?:(?:DEFAULT_)?CSS = (\"))",
-            "beginCaptures": {
-                "1": { "name": "string.quoted.single.python punctuation.definition.string.begin.python" }
-            },
-            "end": "(\")",
-            "endCaptures": {
-                "1": { "name": "string.quoted.single.python punctuation.definition.string.end.python"}
-            },
-            "patterns": [
-                { "include": "source.tcss" }
-            ]
-        },
-        {
-            "begin": "(?:(?:DEFAULT_)?CSS = ('))",
-            "beginCaptures": {
-                "1": { "name": "string.quoted.single.python punctuation.definition.string.begin.python" }
-            },
-            "end": "(')",
-            "endCaptures": {
-                "1": { "name": "string.quoted.single.python punctuation.definition.string.end.python"}
-            },
-            "patterns": [
-                { "include": "source.tcss" }
-            ]
+        "5": {
+          "name": "string.quoted.multi.python punctuation.definition.string.begin.python"
         }
-    ]
+      },
+      "end": "(\"\"\")",
+      "endCaptures": {
+        "1": {
+          "name": "string.quoted.multi.python punctuation.definition.string.end.python"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.tcss"
+        }
+      ]
+    },
+    "tcss-triple-single-quoted": {
+      "begin": "((?<!\\w)(?:DEFAULT_)?CSS)(\\s*)(=)(\\s*)(''')",
+      "beginCaptures": {
+        "1": {
+          "name": "constant.other.caps.python"
+        },
+        "3": {
+          "name": "keyword.operator.assignment.python"
+        },
+        "5": {
+          "name": "string.quoted.multi.python punctuation.definition.string.begin.python"
+        }
+      },
+      "end": "(''')",
+      "endCaptures": {
+        "1": {
+          "name": "string.quoted.multi.python punctuation.definition.string.end.python"
+        }
+      },
+      "patterns": [
+        {
+          "include": "source.tcss"
+        }
+      ]
+    },
+    "tcss-double-quoted": {
+      "match": "((?<!\\w)(?:DEFAULT_)?CSS)(\\s*)(=)(\\s*)(\")([^\"\\n]*\\{[^\"\\n]*)(\")",
+      "captures": {
+        "1": {
+          "name": "constant.other.caps.python"
+        },
+        "3": {
+          "name": "keyword.operator.assignment.python"
+        },
+        "5": {
+          "name": "string.quoted.single.python punctuation.definition.string.begin.python"
+        },
+        "6": {
+          "patterns": [
+            {
+              "include": "source.tcss"
+            }
+          ]
+        },
+        "7": {
+          "name": "string.quoted.single.python punctuation.definition.string.end.python"
+        }
+      }
+    },
+    "tcss-single-quoted": {
+      "match": "((?<!\\w)(?:DEFAULT_)?CSS)(\\s*)(=)(\\s*)(')([^'\\n]*\\{[^'\\n]*)(')",
+      "captures": {
+        "1": {
+          "name": "constant.other.caps.python"
+        },
+        "3": {
+          "name": "keyword.operator.assignment.python"
+        },
+        "5": {
+          "name": "string.quoted.single.python punctuation.definition.string.begin.python"
+        },
+        "6": {
+          "patterns": [
+            {
+              "include": "source.tcss"
+            }
+          ]
+        },
+        "7": {
+          "name": "string.quoted.single.python punctuation.definition.string.end.python"
+        }
+      }
+    }
+  }
 }

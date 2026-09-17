@@ -50,3 +50,50 @@ describe('the Python injection', () => {
     expect(linesScopedWith(without, 'tcss')).toEqual([]);
   });
 });
+
+// https://github.com/Textualize/tcss-vscode-extension/issues/7
+describe('a single-line quoted CSS assignment (issue #7)', () => {
+  const AFTER = ['', 'def compose(self):', '    return None'];
+
+  /** Assert that nothing after `body` is still scoped as TCSS. */
+  async function expectNoLeak(body: readonly string[]): Promise<void> {
+    const tokens = await python([...body, ...AFTER].join('\n'));
+    const leaked = linesScopedWith(tokens, 'tcss').filter((line) => line > body.length);
+    expect(leaked).toEqual([]);
+    expect(tokenFor(tokens, 'def')?.scopes.at(-1)).toContain('storage.type.function.python');
+    expect(tokenFor(tokens, 'return')?.scopes.at(-1)).toContain('keyword.control.flow.python');
+  }
+
+  it('terminates on a double-quoted DEFAULT_CSS', async () => {
+    await expectNoLeak(['class C(DOMNode):', '    DEFAULT_CSS = "C"']);
+  });
+
+  it('terminates on a single-quoted DEFAULT_CSS', async () => {
+    await expectNoLeak(['class C(DOMNode):', "    DEFAULT_CSS = 'C'"]);
+  });
+
+  it('terminates on a double-quoted CSS holding a real rule', async () => {
+    await expectNoLeak(['class C(DOMNode):', '    CSS = "Button { color: red; }"']);
+  });
+
+  it('still highlights the rule inside a single-line CSS string', async () => {
+    const tokens = await python('class C(DOMNode):\n    CSS = "Button { color: red; }"\n');
+    expect(tokenFor(tokens, 'Button')?.scopes.at(-1)).toContain('entity.name.tag.widget.tcss');
+    expect(tokenFor(tokens, 'color')?.scopes.at(-1)).toContain('support.type.property-name');
+  });
+
+  it('leaves an unrelated CSS enum member alone', async () => {
+    // A StrEnum member named CSS is ordinary Python, not a Textual class variable.
+    const body = ['import enum', '', 'class Kind(enum.StrEnum):', '    CSS = "css"'];
+    await expectNoLeak(body);
+
+    const tokens = await python(body.join('\n'));
+    expect(linesScopedWith(tokens, 'tcss')).toEqual([]);
+    expect(tokenFor(tokens, 'css')?.scopes.at(-1)).toContain('string.quoted');
+  });
+
+  it('does not fire on an identifier that merely ends in CSS', async () => {
+    const tokens = await python('SCSS = "scss"\nPREFIX_CSS = "x"\n');
+    expect(linesScopedWith(tokens, 'tcss')).toEqual([]);
+  });
+});
