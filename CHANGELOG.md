@@ -2,7 +2,7 @@
 
 ## 1.4.0
 
-First release of the community fork (`kaierikniermann.textual-syntax-highlighter`).
+First release of the community fork (`KaiErikNiermann.textual-syntax-highlighter`).
 
 Fixes:
 

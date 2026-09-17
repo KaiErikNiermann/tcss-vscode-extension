@@ -59,7 +59,7 @@ Fixed relative to upstream 1.3.1:
 **VS Code** — search the Marketplace for *Textual Syntax Highlighter (Community)*, or:
 
 ```bash
-code --install-extension kaierikniermann.textual-syntax-highlighter
+code --install-extension KaiErikNiermann.textual-syntax-highlighter
 ```
 
 **VSCodium** — the extension is published to [Open VSX](https://open-vsx.org), so the

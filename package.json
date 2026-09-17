@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/KaiErikNiermann/tcss-vscode-extension.git"
   },
-  "publisher": "kaierikniermann",
+  "publisher": "KaiErikNiermann",
   "engines": {
     "vscode": "^1.79.0",
     "node": ">=20"
@@ -47,7 +47,7 @@
     "commands": [],
     "configurationDefaults": {
       "[Textual CSS]": {
-        "editor.defaultFormatter": "kaierikniermann.textual-syntax-highlighter"
+        "editor.defaultFormatter": "KaiErikNiermann.textual-syntax-highlighter"
       }
     }
   },

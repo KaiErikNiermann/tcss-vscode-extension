@@ -205,7 +205,7 @@ publish-vsix-dry: build
 #
 # Open VSX is what VSCodium and other non-Microsoft builds read; it needs
 # OVSX_PAT and a one-time
-# `pnpm exec ovsx create-namespace kaierikniermann -p $OVSX_PAT`.
+# `pnpm exec ovsx create-namespace KaiErikNiermann -p $OVSX_PAT`.
 publish-vsix: build
     #!/usr/bin/env bash
     set -euo pipefail
