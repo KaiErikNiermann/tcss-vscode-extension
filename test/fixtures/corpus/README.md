@@ -4,7 +4,7 @@ Real stylesheets, vendored so the parser is tested against what people actually
 write rather than against fixtures written to match the grammar. Every file parses
 with zero lexer and parser errors, which `test/corpus.test.mts` enforces.
 
-Collected 2026-09-17.
+Refresh with `just corpus-refresh`. Collected 2026-09-17.
 
 | Source | Commit | Files |
 | --- | --- | --- |
