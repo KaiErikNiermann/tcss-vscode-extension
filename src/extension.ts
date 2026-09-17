@@ -1,10 +1,15 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import type * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {}
+/**
+ * Everything this extension currently ships — the `.tcss` grammar, the language
+ * configuration and the Python injection — is declarative and applies without any
+ * code running. The entry point exists so that later work (a TCSS language server,
+ * the linting in issues #1-#3, the formatter in issue #5) has somewhere to attach.
+ */
+export function activate(_context: vscode.ExtensionContext): void {
+  // No runtime behaviour yet.
+}
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate(): void {
+  // No runtime behaviour yet.
+}
