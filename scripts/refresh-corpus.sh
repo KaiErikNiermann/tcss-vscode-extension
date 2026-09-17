@@ -19,9 +19,7 @@ mkdir -p "$DEST"
 {
   echo "# TCSS corpus"
   echo
-  echo "Real stylesheets, vendored so the parser is tested against what people actually"
-  echo "write rather than against fixtures written to match the grammar. Every file parses"
-  echo "with zero lexer and parser errors, which \`test/corpus.test.mts\` enforces."
+  echo "Real stylesheets, vendored so the parser is tested against what people actually write rather than against fixtures written to match the grammar. Every file parses with zero lexer and parser errors, which \`test/corpus.test.mts\` enforces."
   echo
   echo "Refresh with \`just corpus-refresh\`. Collected $(date -u +%Y-%m-%d)."
   echo
@@ -46,8 +44,7 @@ done
 
 {
   echo
-  echo 'All sources are MIT licensed. File names encode their origin path, with `/`'
-  echo 'replaced by `__`.'
+  echo 'All sources are MIT licensed. File names encode their origin path, with `/` replaced by `__`.'
 } >> "$DEST/README.md"
 
 echo "corpus written to $DEST"

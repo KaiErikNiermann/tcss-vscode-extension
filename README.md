@@ -1,8 +1,6 @@
 # Textual CSS Syntax Highlighter (Community)
 
-Language support for [Textual](https://github.com/Textualize/textual) CSS: syntax
-highlighting for `.tcss` files and for TCSS embedded in Python, plus a language server
-that parses the document.
+Language support for [Textual](https://github.com/Textualize/textual) CSS: syntax highlighting for `.tcss` files and for TCSS embedded in Python, plus a language server that parses the document.
 
 ![A view of a highlighted file.](./tcss.png)
 
@@ -22,24 +20,13 @@ Beyond highlighting, `.tcss` files get:
 | Navigation | Go-to-definition, find-references and rename on `$variables` |
 | Completion | Variables the document defines |
 
-Unresolved variable references are deliberately not flagged. Textual injects a design
-system -- `$primary`, `$surface`, `$panel`, their `-lighten-N` and `-darken-N` shades,
-and a long tail of component variables -- that no stylesheet declares, so "not defined
-in this file" is not an error.
+Unresolved variable references are deliberately not flagged. Textual injects a design system—`$primary`, `$surface`, `$panel`, their `-lighten-N` and `-darken-N` shades, and a long tail of component variables—that no stylesheet declares, so "not defined in this file" is not an error.
 
-The linting feature requests (extension
-[#1](https://github.com/Textualize/tcss-vscode-extension/issues/1),
-[#2](https://github.com/Textualize/tcss-vscode-extension/issues/2),
-[#3](https://github.com/Textualize/tcss-vscode-extension/issues/3)) are about Python
-rather than TCSS -- `BINDINGS`, watcher methods, event handlers -- so they need a
-different tool and are not covered here.
+The linting feature requests (extension [#1](https://github.com/Textualize/tcss-vscode-extension/issues/1), [#2](https://github.com/Textualize/tcss-vscode-extension/issues/2), [#3](https://github.com/Textualize/tcss-vscode-extension/issues/3)) are about Python rather than TCSS—`BINDINGS`, watcher methods, event handlers—so they need a different tool and are not covered here.
 
 ## About this fork
 
-This is a community-maintained fork of
-[Textualize/tcss-vscode-extension](https://github.com/Textualize/tcss-vscode-extension),
-whose last commit was 2024-01-09 and whose last maintainer reply on an issue was
-2023-11-22. The open bugs are fixed here. It is not endorsed by Textualize.
+This is a community-maintained fork of [Textualize/tcss-vscode-extension](https://github.com/Textualize/tcss-vscode-extension), whose last commit was 2024-01-09 and whose last maintainer reply on an issue was 2023-11-22. The open bugs are fixed here. It is not endorsed by Textualize.
 
 Fixed relative to upstream 1.3.1:
 
@@ -62,11 +49,9 @@ Fixed relative to upstream 1.3.1:
 code --install-extension KaiErikNiermann.tcss-syntax-highlighter
 ```
 
-**VSCodium** — the extension is published to [Open VSX](https://open-vsx.org), so the
-built-in marketplace finds it.
+**VSCodium** — the extension is published to [Open VSX](https://open-vsx.org), so the built-in marketplace finds it.
 
-**Cursor, or any editor without a marketplace entry** — every release attaches a
-`.vsix`, and every build of `main` uploads one as a workflow artifact:
+**Cursor, or any editor without a marketplace entry** — every release attaches a `.vsix`, and every build of `main` uploads one as a workflow artifact:
 
 ```bash
 # from https://github.com/KaiErikNiermann/tcss-vscode-extension/releases
@@ -81,36 +66,23 @@ just check          # generate-check, lint, typecheck, tests
 just install-local  # build, package and install into your editor
 ```
 
-`just --list` has the rest. Without `just`, the same things are `pnpm install`,
-`pnpm run check` and `pnpm run package`.
+`just --list` has the rest. Without `just`, the same things are `pnpm install`, `pnpm run check` and `pnpm run package`.
 
 ### Tests
 
 Everything runs headless, in about a second:
 
-- **TextMate** — `test/tokenize.mts` drives both grammars through `vscode-textmate`
-  exactly as the editor does, so highlighting is testable per rule.
-- **Corpus** — the 161 `.tcss` files Textual and textual-dev ship, vendored under
-  `test/fixtures/corpus` with their commit SHAs. `just corpus-refresh` re-downloads
-  them. Three grammar defects came straight out of this.
-- **Fuzzing** — seven fast-check properties over the parser and formatter. Deterministic
-  by default; `just fuzz 50000` runs longer and unseeded.
+- **TextMate** — `test/tokenize.mts` drives both grammars through `vscode-textmate` exactly as the editor does, so highlighting is testable per rule.
+- **Corpus** — the 161 `.tcss` files Textual and textual-dev ship, vendored under `test/fixtures/corpus` with their commit SHAs. `just corpus-refresh` re-downloads them. Three grammar defects came straight out of this.
+- **Fuzzing** — seven fast-check properties over the parser and formatter. Deterministic by default; `just fuzz 50000` runs longer and unseeded.
 
 ### The grammars
 
 There are two, and they do different jobs.
 
-`syntaxes/*.tmLanguage.json` are TextMate grammars, responsible only for colour.
-Upstream generated `tcss.tmGrammar.json` from a YAML source in
-[tcss-textmate-grammar](https://github.com/Textualize/tcss-textmate-grammar), which is as
-dormant as this repository was, so the JSON here is the source of truth and is edited
-directly. `syntaxes/python.injection.json` is the injection that finds TCSS inside
-Python.
+`syntaxes/*.tmLanguage.json` are TextMate grammars, responsible only for colour. Upstream generated `tcss.tmGrammar.json` from a YAML source in [tcss-textmate-grammar](https://github.com/Textualize/tcss-textmate-grammar), which is as dormant as this repository was, so the JSON here is the source of truth and is edited directly. `syntaxes/python.injection.json` is the injection that finds TCSS inside Python.
 
-`src/language/tcss.langium` is the Langium grammar behind everything else. It follows
-`textual.css.tokenize`, which is the authority on what Textual accepts. Run
-`just generate` after editing it; the generated sources are committed and the pre-push
-hook refuses a push where they have drifted.
+`src/language/tcss.langium` is the Langium grammar behind everything else. It follows `textual.css.tokenize`, which is the authority on what Textual accepts. Run `just generate` after editing it; the generated sources are committed and the pre-push hook refuses a push where they have drifted.
 
 ## Release notes
 
