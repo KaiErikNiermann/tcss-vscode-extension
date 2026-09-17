@@ -1,0 +1,31 @@
+#!/bin/sh
+# Refuses a push that would not survive CI. Same commands the ci workflow runs.
+#
+# Enabled by `pnpm install`, which runs the `prepare` script and points
+# core.hooksPath here. Bypass for a genuine emergency with `git push --no-verify`.
+set -e
+
+if [ -n "$SKIP_PREPUSH" ]; then
+  echo "pre-push: skipped (SKIP_PREPUSH is set)"
+  exit 0
+fi
+
+echo "pre-push: regenerating the Langium artefacts"
+pnpm run langium:generate
+
+if ! git diff --quiet -- src/language/generated; then
+  echo "pre-push: src/language/generated is stale." >&2
+  echo "          Run 'pnpm run langium:generate' and commit the result." >&2
+  exit 1
+fi
+
+echo "pre-push: lint"
+pnpm run lint
+
+echo "pre-push: typecheck"
+pnpm run typecheck
+
+echo "pre-push: test"
+pnpm run test
+
+echo "pre-push: ok"

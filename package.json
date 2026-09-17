@@ -52,6 +52,7 @@
     }
   },
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || true",
     "vscode:prepublish": "pnpm run build",
     "langium:generate": "langium generate",
     "langium:watch": "langium generate --watch",
