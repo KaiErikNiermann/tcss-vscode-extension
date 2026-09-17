@@ -33,6 +33,11 @@ const RUNS = {
 /** Enough headroom for a deliberately heavy FUZZ_RUNS; the default set finishes in ~1s. */
 const TIMEOUT = Math.max(30_000, RUNS.numRuns * 20);
 
+/** Every token image in order, which is everything formatting may not change. */
+function tokens(source: string): string[] {
+  return Tcss.parser.Lexer.tokenize(source).tokens.map((token) => token.image);
+}
+
 async function format(source: string): Promise<string> {
   const document = await parse(source);
   const edits = await Tcss.lsp.Formatter!.formatDocument(document, {
@@ -187,6 +192,24 @@ describe('the formatter', () => {
         expect(document.parseResult.parserErrors.map((error) => error.message)).toEqual([]);
       }),
       { ...RUNS, numRuns: Math.min(RUNS.numRuns, 100) },
+    );
+  }, TIMEOUT);
+
+  it('never changes what the document says', async () => {
+    await fc.assert(
+      fc.asyncProperty(stylesheet, async (source) => {
+        expect(tokens(await format(source))).toEqual(tokens(source));
+      }),
+      { ...RUNS, numRuns: Math.min(RUNS.numRuns, 100) },
+    );
+  }, TIMEOUT);
+
+  it('never throws on a corrupted stylesheet', async () => {
+    await fc.assert(
+      fc.asyncProperty(mutatedCorpus, async (source) => {
+        expect(await format(source)).toBeTypeOf('string');
+      }),
+      { ...RUNS, numRuns: Math.min(RUNS.numRuns, 80) },
     );
   }, TIMEOUT);
 
