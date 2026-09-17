@@ -50,9 +50,22 @@ jobs:
         if: ${{ inputs.dry-run != true && env.OVSX_PAT != '' }}
         run: pnpm exec ovsx publish "${{ steps.package.outputs.vsix }}" --pat "$OVSX_PAT"
 
+      # Release notes are the CHANGELOG section for this version rather than a list
+      # of commit subjects, so the tag and the changelog cannot say different things.
+      - name: Collect the release notes
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: notes
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          {
+            echo 'body<<CHANGELOG_EOF'
+            ./scripts/changelog-section.sh "$version"
+            echo 'CHANGELOG_EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Attach the vsix to the GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v3
         with:
           files: ${{ steps.package.outputs.vsix }}
-          generate_release_notes: true
+          body: ${{ steps.notes.outputs.body }}

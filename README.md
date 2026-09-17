@@ -1,13 +1,38 @@
 # Textual CSS Syntax Highlighter (Community)
 
-Syntax highlighting for [Textual](https://github.com/Textualize/textual) CSS: `.tcss`
-files, and TCSS embedded in Python.
+Language support for [Textual](https://github.com/Textualize/textual) CSS: syntax
+highlighting for `.tcss` files and for TCSS embedded in Python, plus a language server
+that parses the document.
 
 ![A view of a highlighted file.](./tcss.png)
 
 Highlighting also applies inside `CSS` and `DEFAULT_CSS` class variables in Python files:
 
 ![A Python file and a `CSS` class variable highlighted.](./python_injection.png)
+
+## Language features
+
+Beyond highlighting, `.tcss` files get:
+
+| Feature | What it does |
+| --- | --- |
+| Diagnostics | Syntax errors, and warnings for an unknown style or pseudo-class with a nearest-match suggestion |
+| Formatting | One declaration per line, four-space indent, normalised spacing. The default formatter for the language |
+| Outline and folding | Variables and rules in the breadcrumb and outline view; a folding range per rule body |
+| Navigation | Go-to-definition, find-references and rename on `$variables` |
+| Completion | Variables the document defines |
+
+Unresolved variable references are deliberately not flagged. Textual injects a design
+system -- `$primary`, `$surface`, `$panel`, their `-lighten-N` and `-darken-N` shades,
+and a long tail of component variables -- that no stylesheet declares, so "not defined
+in this file" is not an error.
+
+The linting feature requests (extension
+[#1](https://github.com/Textualize/tcss-vscode-extension/issues/1),
+[#2](https://github.com/Textualize/tcss-vscode-extension/issues/2),
+[#3](https://github.com/Textualize/tcss-vscode-extension/issues/3)) are about Python
+rather than TCSS -- `BINDINGS`, watcher methods, event handlers -- so they need a
+different tool and are not covered here.
 
 ## About this fork
 
@@ -27,14 +52,7 @@ Fixed relative to upstream 1.3.1:
 | [grammar#2](https://github.com/Textualize/tcss-textmate-grammar/issues/2) | Quoted property values were not highlighted as strings |
 | [grammar#5](https://github.com/Textualize/tcss-textmate-grammar/issues/5) | `transition`, duration units and easing names were unknown |
 | [grammar#8](https://github.com/Textualize/tcss-textmate-grammar/issues/8) | The first selector of a nested rule was read as a property name, which unbalanced every brace after it |
-
-The linting and formatting feature requests (extension
-[#1](https://github.com/Textualize/tcss-vscode-extension/issues/1),
-[#2](https://github.com/Textualize/tcss-vscode-extension/issues/2),
-[#3](https://github.com/Textualize/tcss-vscode-extension/issues/3),
-[#5](https://github.com/Textualize/tcss-vscode-extension/issues/5)) need a language
-server rather than a TextMate grammar, and are planned on top of
-[Langium](https://langium.org).
+| [extension#5](https://github.com/Textualize/tcss-vscode-extension/issues/5) | No formatter, and VS Code's CSS formatter cannot be borrowed for TCSS |
 
 ## Install
 
@@ -58,22 +76,41 @@ code --install-extension textual-syntax-highlighter-<version>.vsix
 ## Development
 
 ```bash
-pnpm install
-pnpm run check      # lint, typecheck and tests
-pnpm run package    # build the .vsix
+just dev            # install dependencies and the pre-push hook
+just check          # generate-check, lint, typecheck, tests
+just install-local  # build, package and install into your editor
 ```
 
-`pnpm run test` tokenises the grammars through `vscode-textmate` the same way the
-editor does, so grammar changes are testable without starting an editor. Tests live in
-`test/`; `test/tokenize.mts` is the harness.
+`just --list` has the rest. Without `just`, the same things are `pnpm install`,
+`pnpm run check` and `pnpm run package`.
 
-### The grammar
+### Tests
 
-Upstream generated `syntaxes/tcss.tmGrammar.json` from a YAML source in
-[tcss-textmate-grammar](https://github.com/Textualize/tcss-textmate-grammar). That
-repository is as dormant as this one was, so the JSON here is the source of truth and is
-edited directly. `syntaxes/python.injection.json` is the injection that finds TCSS inside
+Everything runs headless, in about a second:
+
+- **TextMate** — `test/tokenize.mts` drives both grammars through `vscode-textmate`
+  exactly as the editor does, so highlighting is testable per rule.
+- **Corpus** — the 161 `.tcss` files Textual and textual-dev ship, vendored under
+  `test/fixtures/corpus` with their commit SHAs. `just corpus-refresh` re-downloads
+  them. Three grammar defects came straight out of this.
+- **Fuzzing** — seven fast-check properties over the parser and formatter. Deterministic
+  by default; `just fuzz 50000` runs longer and unseeded.
+
+### The grammars
+
+There are two, and they do different jobs.
+
+`syntaxes/*.tmLanguage.json` are TextMate grammars, responsible only for colour.
+Upstream generated `tcss.tmGrammar.json` from a YAML source in
+[tcss-textmate-grammar](https://github.com/Textualize/tcss-textmate-grammar), which is as
+dormant as this repository was, so the JSON here is the source of truth and is edited
+directly. `syntaxes/python.injection.json` is the injection that finds TCSS inside
 Python.
+
+`src/language/tcss.langium` is the Langium grammar behind everything else. It follows
+`textual.css.tokenize`, which is the authority on what Textual accepts. Run
+`just generate` after editing it; the generated sources are committed and the pre-push
+hook refuses a push where they have drifted.
 
 ## Release notes
 

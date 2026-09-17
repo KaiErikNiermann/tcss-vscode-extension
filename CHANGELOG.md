@@ -33,10 +33,25 @@ Distribution:
   other editors without a marketplace entry can install it.
   [extension#8](https://github.com/Textualize/tcss-vscode-extension/issues/8)
 
+Language server:
+
+- A TCSS language server built on [Langium](https://langium.org). A TextMate grammar
+  colours characters; this parses the document, so the editor now offers diagnostics
+  (syntax errors, plus unknown styles and pseudo-classes with a nearest-match
+  suggestion), an outline, folding, and go-to-definition, find-references, rename and
+  completion for `$variables`.
+- Formatting, contributed as the default formatter for the language.
+  [extension#5](https://github.com/Textualize/tcss-vscode-extension/issues/5)
+- Unresolved variable references are deliberately not reported: Textual injects a design
+  system (`$primary`, `$surface`, their shades, and a long tail of component variables)
+  that no stylesheet declares.
+
 Project:
 
-- pnpm, ESLint 10 flat config with sonarjs/unicorn/security, strict TypeScript, and a
-  headless grammar test suite that runs in CI.
+- pnpm, ESLint 10 flat config with sonarjs/unicorn/security, strict TypeScript, a
+  pre-push hook, a Justfile, and a test suite that runs headless in CI: unit tests for
+  both grammars, the 161 real stylesheets Textual ships, and seven fast-check properties
+  fuzzing the parser and the formatter.
 
 ## 1.3.1
 
