@@ -1,5 +1,43 @@
 # Change Log
 
+## 1.4.0
+
+First release of the community fork (`kaierikniermann.textual-syntax-highlighter`).
+
+Fixes:
+
+- A one-line `CSS = "..."` or `DEFAULT_CSS = "..."` no longer swallows the rest of the
+  Python file. Single-line assignments are matched by a rule that cannot leave a region
+  open, and an ordinary string assigned to something merely named `CSS` is left alone.
+  [extension#7](https://github.com/Textualize/tcss-vscode-extension/issues/7)
+- A commented-out CSS assignment is no longer treated as one. All injection rules now
+  require the assignment to be the first thing on its line.
+  [extension#6](https://github.com/Textualize/tcss-vscode-extension/issues/6)
+- Nested rules parse. The first nested selector was read as a property name and the
+  nested `{` opened nothing, which left every brace after it off by one.
+  [grammar#8](https://github.com/Textualize/tcss-textmate-grammar/issues/8)
+
+Features:
+
+- Quoted strings are highlighted as property values.
+  [grammar#2](https://github.com/Textualize/tcss-textmate-grammar/issues/2)
+- `transition` is a known property, `ms` and `s` are known duration units, and all 33
+  easing names are known values.
+  [grammar#5](https://github.com/Textualize/tcss-textmate-grammar/issues/5)
+
+Distribution:
+
+- Published to Open VSX for VSCodium.
+  [extension#10](https://github.com/Textualize/tcss-vscode-extension/issues/10)
+- Every release attaches a `.vsix`, and every build of `main` uploads one, so Cursor and
+  other editors without a marketplace entry can install it.
+  [extension#8](https://github.com/Textualize/tcss-vscode-extension/issues/8)
+
+Project:
+
+- pnpm, ESLint 10 flat config with sonarjs/unicorn/security, strict TypeScript, and a
+  headless grammar test suite that runs in CI.
+
 ## 1.3.1
 
 - Add support for `panel` border type
