@@ -1,0 +1,69 @@
+/* Every construct here is valid TCSS. The bundled example.tcss deliberately mixes in
+   invalid input to show what error highlighting looks like, so it is not usable as a
+   "this must parse" fixture. */
+
+# A line comment needs the space after the hash.
+
+$accent: red;
+$speed: 175ms;
+$easing: in_out_cubic;
+
+Screen {
+    align: center middle;
+    background: $surface;
+    layers: "below above";
+}
+
+#sidebar {
+    width: 25%;
+    height: 1fr;
+    dock: left;
+    border: round $accent;
+}
+
+.error, .warning {
+    color: #ff0000;
+    text-style: bold italic;
+}
+
+Widget.selected > Label {
+    color: rgb(12, 23, 34);
+    opacity: 0.5;
+}
+
+Button:hover {
+    background: $accent;
+    transition: background $speed $easing, color 200ms out_bounce;
+}
+
+Button:focus-within {
+    outline: heavy $accent;
+}
+
+DataTable {
+    scrollbar-size: 1 1;
+
+    & > .datatable--header {
+        text-style: bold;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+    }
+
+    Label {
+        padding: 1 2;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+Static {
+    padding: 1 2 3 4;
+    margin: 0;
+    offset: -1 2;
+    width: .5fr;
+    content-align: center middle !important;
+}

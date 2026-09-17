@@ -7,7 +7,8 @@
       "ES2023"
     ],
     "types": [
-      "node"
+      "node",
+      "vscode"
     ],
     "sourceMap": true,
     "noEmit": true,
@@ -31,6 +32,7 @@
     "src/**/*.ts",
     "test/**/*.mts",
     "*.config.mts",
-    "eslint.config.mjs"
+    "eslint.config.mjs",
+    "esbuild.mjs"
   ]
 }

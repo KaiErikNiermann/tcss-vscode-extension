@@ -16,8 +16,10 @@
   "categories": [
     "Programming Languages"
   ],
-  "activationEvents": [],
-  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:Textual CSS"
+  ],
+  "main": "./out/extension/main.cjs",
   "contributes": {
     "languages": [
       {
@@ -42,20 +44,27 @@
         ]
       }
     ],
-    "commands": []
+    "commands": [],
+    "configurationDefaults": {
+      "[Textual CSS]": {
+        "editor.defaultFormatter": "kaierikniermann.textual-syntax-highlighter"
+      }
+    }
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
-    "compile": "tsc -p tsconfig.build.json",
-    "watch": "tsc -watch -p tsconfig.build.json",
+    "vscode:prepublish": "pnpm run build",
+    "langium:generate": "langium generate",
+    "langium:watch": "langium generate --watch",
+    "build": "pnpm run langium:generate && node esbuild.mjs",
+    "watch": "pnpm run langium:generate && node esbuild.mjs --watch",
     "typecheck": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
-    "check": "pnpm run lint && pnpm run typecheck && pnpm run test",
-    "package": "vsce package --no-dependencies"
+    "check": "pnpm run langium:generate && pnpm run lint && pnpm run typecheck && pnpm run test",
+    "package": "pnpm run build && vsce package --no-dependencies"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -63,14 +72,19 @@
     "@types/vscode": "^1.79.0",
     "@vitest/coverage-v8": "^5.0.1",
     "@vscode/vsce": "^4.0.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.10.0",
     "eslint-plugin-security": "^4.0.1",
     "eslint-plugin-sonarjs": "^4.2.1",
     "eslint-plugin-unicorn": "^75.0.0",
+    "globals": "^17.12.0",
+    "langium-cli": "^4.4.0",
     "ovsx": "^1.2.0",
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.70.0",
     "vitest": "^5.0.1",
+    "vscode-languageserver-textdocument": "^1.0.14",
+    "vscode-languageserver-types": "^3.18.3",
     "vscode-oniguruma": "^2.0.1",
     "vscode-textmate": "^9.3.2"
   },
@@ -87,5 +101,11 @@
     "tui",
     "syntax-highlighting"
   ],
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "dependencies": {
+    "langium": "^4.4.0",
+    "vscode-languageclient": "^10.1.1",
+    "vscode-languageserver": "^10.1.1"
+  },
+  "type": "module"
 }

@@ -1,0 +1,13 @@
+{
+  "projectName": "Tcss",
+  "languages": [
+    {
+      "id": "tcss",
+      "grammar": "src/language/tcss.langium",
+      "fileExtensions": [
+        ".tcss"
+      ]
+    }
+  ],
+  "out": "src/language/generated"
+}
