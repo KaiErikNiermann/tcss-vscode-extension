@@ -4,8 +4,16 @@
     "noEmit": false,
     "rootDir": "src",
     "outDir": "out",
-    "types": ["node", "vscode"]
+    "types": [
+      "node",
+      "vscode"
+    ],
+    "allowImportingTsExtensions": false
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts"
+  ]
 }
