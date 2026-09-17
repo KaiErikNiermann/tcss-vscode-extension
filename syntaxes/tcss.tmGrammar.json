@@ -222,6 +222,12 @@
           "include": "#comment-line"
         },
         {
+          "include": "#selector"
+        },
+        {
+          "include": "#rule-list"
+        },
+        {
           "begin": "(?<![-a-zA-Z])(?=[a-zA-Z])",
           "end": "$|(?![-a-zA-Z])",
           "name": "meta.property-name.tcss",
@@ -257,14 +263,11 @@
         {
           "match": ";",
           "name": "punctuation.terminator.rule.tcss"
-        },
-        {
-          "include": "#selector"
         }
       ]
     },
     "selector": {
-      "begin": "(?=[.*\\#\\&a-zA-Z_])",
+      "begin": "(?=[.*\\#\\&a-zA-Z_](?:[^;{}]*\\{|[^;{}]*,\\s*$))",
       "end": "(?=\\s*{)",
       "name": "meta.selector.tcss",
       "patterns": [
