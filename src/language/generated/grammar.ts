@@ -348,11 +348,23 @@ export const TcssGrammar = (): Grammar => loadedTcssGrammar ?? (loadedTcssGramma
         "feature": "name",
         "operator": "=",
         "terminal": {
-          "$type": "RuleCall",
-          "rule": {
-            "$ref": "#/rules@40"
-          },
-          "arguments": []
+          "$type": "Alternatives",
+          "elements": [
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@40"
+              },
+              "arguments": []
+            },
+            {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@32"
+              },
+              "arguments": []
+            }
+          ]
         }
       },
       "entry": false,

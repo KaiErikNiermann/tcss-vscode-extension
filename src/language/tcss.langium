@@ -50,8 +50,12 @@ TypeSelector:
 ClassSelector:
     name=CLASS_NAME;
 
+// `#a00` is both a valid id and a valid three-digit hex colour, and a stateless lexer
+// cannot tell them apart -- Textual can only because its tokenizer knows whether it is
+// reading a selector or a value. HEX_COLOR wins in the lexer so that `color: #a00`
+// works, so an id selector accepts that spelling back here.
 IdSelector:
-    name=ID_NAME;
+    name=(ID_NAME | HEX_COLOR);
 
 UniversalSelector:
     value='*';
