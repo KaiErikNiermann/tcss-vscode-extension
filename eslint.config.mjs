@@ -1,0 +1,57 @@
+import { defineConfig, globalIgnores } from 'eslint/config';
+
+import js from '@eslint/js';
+import security from 'eslint-plugin-security';
+import sonarjs from 'eslint-plugin-sonarjs';
+import unicorn from 'eslint-plugin-unicorn';
+import tseslint from 'typescript-eslint';
+
+export default defineConfig([
+  globalIgnores(['out/**', 'dist/**', 'coverage/**', 'node_modules/**', '**/*.d.ts']),
+  js.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
+  sonarjs.configs.recommended,
+  unicorn.configs.recommended,
+  security.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: { allowDefaultProject: ['eslint.config.mjs'] },
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      curly: 'error',
+      eqeqeq: ['error', 'always'],
+      'no-throw-literal': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
+      // `null` is part of the vscode-textmate and VS Code APIs we implement against.
+      'unicorn/no-null': 'off',
+      // Named imports from node: builtins read better than a namespace object.
+      'unicorn/import-style': 'off',
+      // `/** ... */` on one line is ordinary TSDoc.
+      'unicorn/single-line-block-comment-style': 'off',
+      // TextMate's own vocabulary ("repository", "scope") is the right vocabulary here.
+      'unicorn/name-replacements': 'off',
+      'unicorn/prevent-abbreviations': 'off',
+      'unicorn/consistent-boolean-name': 'off',
+      // VS Code extension sources are camelCase by convention.
+      'unicorn/filename-case': ['error', { cases: { camelCase: true, kebabCase: true } }],
+
+      // Grammar fixtures and expectations are written out literally on purpose.
+      'sonarjs/no-duplicate-string': 'off',
+    },
+  },
+  {
+    // Every path read here is one this repository owns and constructs itself.
+    files: ['test/**/*.mts', '*.config.mts'],
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
+      'security/detect-object-injection': 'off',
+      'sonarjs/no-nested-functions': 'off',
+    },
+  },
+]);
