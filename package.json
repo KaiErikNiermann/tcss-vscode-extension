@@ -1,5 +1,5 @@
 {
-  "name": "textual-syntax-highlighter",
+  "name": "tcss-syntax-highlighter",
   "displayName": "Textual Syntax Highlighter (Community)",
   "description": "Syntax highlighting for Textual CSS (.tcss) and for TCSS embedded in Python. Community-maintained fork of Textualize/tcss-vscode-extension.",
   "version": "1.4.0",
@@ -47,7 +47,7 @@
     "commands": [],
     "configurationDefaults": {
       "[Textual CSS]": {
-        "editor.defaultFormatter": "KaiErikNiermann.textual-syntax-highlighter"
+        "editor.defaultFormatter": "KaiErikNiermann.tcss-syntax-highlighter"
       }
     }
   },

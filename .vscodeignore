@@ -1,8 +1,10 @@
 .github/**
+.githooks/**
 .vscode/**
 .vscode-test/**
 coverage/**
 node_modules/**
+scripts/**
 src/**
 test/**
 
@@ -10,6 +12,7 @@ test/**
 .gitattributes
 .gitignore
 .remember/**
+Justfile
 esbuild.mjs
 eslint.config.mjs
 langium-config.json
