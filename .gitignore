@@ -1,5 +1,6 @@
 # build output
 out
+out-e2e
 dist
 
 # dependencies

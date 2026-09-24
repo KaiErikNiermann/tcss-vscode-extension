@@ -11,6 +11,9 @@ import tseslint from 'typescript-eslint';
 export default defineConfig([
   globalIgnores([
     'out/**',
+    'out-e2e/**',
+    // The VS Code build @vscode/test-electron downloads for the e2e suite.
+    '.vscode-test/**',
     'dist/**',
     'coverage/**',
     'node_modules/**',
@@ -27,7 +30,7 @@ export default defineConfig([
   {
     languageOptions: {
       parserOptions: {
-        projectService: { allowDefaultProject: ['eslint.config.mjs', 'esbuild.mjs'] },
+        projectService: { allowDefaultProject: ['eslint.config.mjs', 'esbuild.mjs', '.vscode-test.mjs'] },
         tsconfigRootDir: import.meta.dirname,
       },
     },

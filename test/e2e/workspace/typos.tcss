@@ -1,0 +1,7 @@
+Screen {
+    background: $surface;
+}
+
+Button:hovr {
+    colr: red;
+}

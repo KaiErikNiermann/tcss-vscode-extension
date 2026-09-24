@@ -1,0 +1,9 @@
+$accent: red;
+
+Button {
+    color: $accent;
+}
+
+Label {
+    background: $accent;
+}

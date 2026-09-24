@@ -65,6 +65,10 @@ test:
 test-watch:
     pnpm run test:watch
 
+# Launch VS Code with the built extension and run test/e2e against it
+test-e2e:
+    pnpm run test:e2e
+
 # Coverage report over src/
 coverage:
     pnpm run coverage

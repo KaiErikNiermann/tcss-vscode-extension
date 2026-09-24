@@ -2,6 +2,8 @@
 .githooks/**
 .vscode/**
 .vscode-test/**
+.vscode-test.mjs
+out-e2e/**
 coverage/**
 node_modules/**
 scripts/**
