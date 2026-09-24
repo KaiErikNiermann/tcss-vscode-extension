@@ -35,6 +35,24 @@ jobs:
 
       - run: pnpm run test
 
+  e2e:
+    name: e2e (VS Code)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # VS Code is an Electron app and needs a display even when nobody watches it.
+      - run: xvfb-run -a pnpm run test:e2e
+
   package:
     name: package vsix
     runs-on: ubuntu-latest
