@@ -78,6 +78,8 @@ Everything runs headless, in about a second:
 - **Corpus** — the 161 `.tcss` files Textual and textual-dev ship, vendored under `test/fixtures/corpus` with their commit SHAs. `just corpus-refresh` re-downloads them. Three grammar defects came straight out of this.
 - **Fuzzing** — seven fast-check properties over the parser and formatter. Deterministic by default; `just fuzz 50000` runs longer and unseeded.
 
+`just test-e2e` is separate and slower: it downloads a VS Code build into `.vscode-test/`, launches it with the extension loaded, opens the files in `test/e2e/workspace` and checks activation, diagnostics, Format Document, symbols, navigation, rename, completion and folding through the real editor API. It needs a display; on a headless Linux box wrap it in `xvfb-run -a`.
+
 ### The grammars
 
 There are two, and they do different jobs.
